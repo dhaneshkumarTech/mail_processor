@@ -30,12 +30,12 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void nextPage() {
+  void nextDoc() {
     currentFile = (currentFile + 1) % controllers.length;
     notifyListeners();
   }
 
-  void previousPage() {
+  void previousDoc() {
     currentFile = (currentFile - 1) % controllers.length;
     notifyListeners();
   }
@@ -43,15 +43,28 @@ class HomeViewModel extends BaseViewModel {
   void pickFiles() async {
     controllers.clear();
     notifyListeners();
+
+    final hasStorageAccess = await filePickerService.requestPermission();
+
+    if (!hasStorageAccess) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'Please grant storage access',
+        dialogPlatform: DialogPlatform.Material,
+      );
+      return;
+    }
+
     final files = await filePickerService.getFiles(true);
     if (files != null) {
       this.files = files;
-      final List<PdfController> newControllers = files
-          .map((e) => PdfController(
-                document: PdfDocument.openFile(e.path),
-              ))
+      controllers = files
+          .map(
+            (e) => PdfController(
+              document: PdfDocument.openFile(e.path),
+            ),
+          )
           .toList();
-      controllers = newControllers;
       onUpdate(0);
       notifyListeners();
     }
@@ -65,6 +78,7 @@ class HomeViewModel extends BaseViewModel {
         notifyListeners();
       } on Exception catch (e) {
         await _dialogService.showDialog(
+          dialogPlatform: DialogPlatform.Material,
           title: 'Error',
           description: e.toString(),
         );
@@ -74,7 +88,8 @@ class HomeViewModel extends BaseViewModel {
 
   void processfile() async {
     await moveFile();
-    await send();
+    await emailFile();
+    removeFile();
   }
 
   void removeFile() {
@@ -92,15 +107,15 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> moveFile() async {
+    if (csvData.isEmpty) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'Please import emails',
+        dialogPlatform: DialogPlatform.Material,
+      );
+      return;
+    }
     try {
-      if (csvData.isEmpty) {
-        await _dialogService.showDialog(
-          title: 'Error',
-          description: 'Please attach emails',
-        );
-        return;
-      }
-
       await runBusyFuture(
         filePickerService.moveFileToFolder(
           files[currentFile],
@@ -112,10 +127,11 @@ class HomeViewModel extends BaseViewModel {
         title: 'Error',
         description: e.toString(),
       );
+      return;
     }
   }
 
-  Future<void> send() async {
+  Future<void> emailFile() async {
     try {
       await runBusyFuture(emailService.sendEmailWithAttachment(
         files[currentFile],
@@ -124,12 +140,15 @@ class HomeViewModel extends BaseViewModel {
       await _dialogService.showDialog(
         title: 'Success',
         description: 'File moved and email sent successfully',
+        dialogPlatform: DialogPlatform.Material,
       );
     } on Exception catch (e) {
       await _dialogService.showDialog(
         title: 'Error',
         description: e.toString(),
+        dialogPlatform: DialogPlatform.Material,
       );
+      return;
     }
   }
 }

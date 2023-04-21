@@ -5,8 +5,23 @@ import 'package:csv/csv.dart';
 import 'package:mail_processor/models/csv_data.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class FilePickerService {
+
+  Future<bool> requestPermission() async {
+    try {
+      final result = await Permission.storage.request();
+      if (result == PermissionStatus.granted) {
+        return true;
+      } else {
+        return false;
+      }
+    } on Exception {
+      return false;
+    }
+  }
+
   Future<List<File>?> getFiles(bool multiple) async {
     try {
       final files = await FilePicker.platform.pickFiles(

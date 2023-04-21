@@ -23,7 +23,7 @@ class HomeView extends StackedView<HomeViewModel> {
             child: Row(
               children: [
                 Text(
-                  viewModel.files.isEmpty ? 'Attach PDFs' : 'PDFs Attached',
+                  viewModel.files.isEmpty ? 'Import PDFs' : 'PDFs imported',
                 ),
                 if (viewModel.files.isNotEmpty)
                   const Icon(
@@ -39,8 +39,8 @@ class HomeView extends StackedView<HomeViewModel> {
               children: [
                 Text(
                   viewModel.csvData.isEmpty
-                      ? 'Attach Emails'
-                      : 'Emails Attached',
+                      ? 'Import Emails'
+                      : 'Emails imported',
                 ),
                 if (viewModel.csvData.isNotEmpty)
                   const Icon(
@@ -108,8 +108,9 @@ class HomeView extends StackedView<HomeViewModel> {
                                   child: TextField(
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
-                                      hintText: 'Unit Number',
+                                      labelText: 'Unit Number',
                                     ),
+                                    keyboardType: TextInputType.number,
                                     onChanged: viewModel.onChangedText,
                                   ),
                                 ),
@@ -119,7 +120,7 @@ class HomeView extends StackedView<HomeViewModel> {
                                     : ElevatedButton(
                                         onPressed: viewModel.unitNumber.isEmpty
                                             ? null
-                                            : viewModel.moveFile,
+                                            : viewModel.processfile,
                                         child: const Text('Send'),
                                       ),
                               ],
@@ -133,7 +134,7 @@ class HomeView extends StackedView<HomeViewModel> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 IconButton(
-                                  onPressed: viewModel.previousPage,
+                                  onPressed: viewModel.previousDoc,
                                   padding: EdgeInsets.zero,
                                   icon: const Icon(
                                     Icons.arrow_back_ios,
@@ -163,7 +164,7 @@ class HomeView extends StackedView<HomeViewModel> {
                                   ),
                                 ),
                                 IconButton(
-                                  onPressed: viewModel.nextPage,
+                                  onPressed: viewModel.nextDoc,
                                   padding: EdgeInsets.zero,
                                   icon: const Icon(
                                     Icons.arrow_forward_ios,
