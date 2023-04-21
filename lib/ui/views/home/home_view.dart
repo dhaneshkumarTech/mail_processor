@@ -109,6 +109,7 @@ class HomeView extends StackedView<HomeViewModel> {
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: 'Unit Number',
+                                      contentPadding: EdgeInsets.zero,
                                     ),
                                     keyboardType: TextInputType.number,
                                     onChanged: viewModel.onChangedText,
@@ -118,6 +119,13 @@ class HomeView extends StackedView<HomeViewModel> {
                                 viewModel.isBusy
                                     ? const CircularProgressIndicator()
                                     : ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                          ),
+                                        ),
                                         onPressed: viewModel.unitNumber.isEmpty
                                             ? null
                                             : viewModel.processfile,
