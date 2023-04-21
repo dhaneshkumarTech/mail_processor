@@ -116,11 +116,11 @@ class HomeView extends StackedView<HomeViewModel> {
                                 horizontalSpaceSmall,
                                 viewModel.isBusy
                                     ? const CircularProgressIndicator()
-                                    : IconButton(
+                                    : ElevatedButton(
                                         onPressed: viewModel.unitNumber.isEmpty
                                             ? null
                                             : viewModel.moveFile,
-                                        icon: const Icon(Icons.send),
+                                        child: const Text('Send'),
                                       ),
                               ],
                             ),
