@@ -53,11 +53,12 @@ class HomeView extends StackedView<HomeViewModel> {
         ],
       ),
       body: SafeArea(
-        child: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           child: Row(
             children: [
               Container(
-                width: 250,
+                width: MediaQuery.of(context).size.width * 0.2,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.grey,
@@ -68,8 +69,8 @@ class HomeView extends StackedView<HomeViewModel> {
                   itemBuilder: (context, index) => GestureDetector(
                     onTap: () => viewModel.onUpdate(index),
                     child: Container(
-                      width: 200,
-                      height: 200,
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      height: MediaQuery.of(context).size.height * 0.2,
                       margin: const EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 5,
@@ -91,98 +92,116 @@ class HomeView extends StackedView<HomeViewModel> {
                 ),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width - 250,
+                width: MediaQuery.of(context).size.width * 0.8,
                 child: viewModel.controllers.isEmpty
                     ? const Center(
                         child: Text('No files selected'),
                       )
-                    : Column(
-                        children: [
-                          SizedBox(
-                            width: 300,
-                            height: 100,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Unit Number',
-                                      contentPadding: EdgeInsets.zero,
+                    : SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              height: MediaQuery.of(context).size.height * 0.1,
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'Unit Number',
+                                        contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                      onChanged: viewModel.onChangedText,
                                     ),
-                                    keyboardType: TextInputType.number,
-                                    onChanged: viewModel.onChangedText,
                                   ),
-                                ),
-                                horizontalSpaceSmall,
-                                viewModel.isBusy
-                                    ? const CircularProgressIndicator()
-                                    : ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(10),
+                                  horizontalSpaceSmall,
+                                  viewModel.isBusy
+                                      ? const CircularProgressIndicator()
+                                      : ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            minimumSize: const Size(100, 55),
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(2),
+                                              ),
                                             ),
                                           ),
+                                          onPressed:
+                                              viewModel.unitNumber.isEmpty
+                                                  ? null
+                                                  : viewModel.processfile,
+                                          child: const Text('Send'),
                                         ),
-                                        onPressed: viewModel.unitNumber.isEmpty
-                                            ? null
-                                            : viewModel.processfile,
-                                        child: const Text('Send'),
-                                      ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 500,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                  onPressed: viewModel.previousDoc,
-                                  padding: EdgeInsets.zero,
-                                  icon: const Icon(
-                                    Icons.arrow_back_ios,
-                                    size: 48,
-                                  ),
-                                ),
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.8,
-                                  width: 500,
-                                  color: Colors.white,
-                                  padding: const EdgeInsets.all(30),
-                                  child: PdfView(
-                                    builders:
-                                        PdfViewBuilders<DefaultBuilderOptions>(
-                                      options: const DefaultBuilderOptions(),
-                                      documentLoaderBuilder: (_) =>
-                                          const Center(
-                                              child:
-                                                  CircularProgressIndicator()),
-                                      errorBuilder: (_, __) => const Center(
-                                        child: Text('Error'),
+                            InteractiveViewer(
+                              panEnabled: true,
+                              minScale: 0.5,
+                              maxScale: 2,
+                              child: SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.8,
+                                width: double.infinity,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      onPressed: viewModel.previousDoc,
+                                      padding: EdgeInsets.zero,
+                                      icon: Icon(
+                                        Icons.arrow_back_ios,
+                                        size:
+                                            MediaQuery.of(context).size.width *
+                                                0.015,
                                       ),
                                     ),
-                                    controller: viewModel
-                                        .controllers[viewModel.currentFile],
-                                  ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.65,
+                                      color: Colors.white,
+                                      padding: const EdgeInsets.all(30),
+                                      child: PdfView(
+                                        builders: PdfViewBuilders<
+                                            DefaultBuilderOptions>(
+                                          options:
+                                              const DefaultBuilderOptions(),
+                                          documentLoaderBuilder: (_) =>
+                                              const Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                          errorBuilder: (_, __) => const Center(
+                                            child: Text('Error'),
+                                          ),
+                                        ),
+                                        controller: viewModel
+                                            .controllers[viewModel.currentFile],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: viewModel.nextDoc,
+                                      padding: EdgeInsets.zero,
+                                      icon: Icon(
+                                        Icons.arrow_forward_ios,
+                                        size:
+                                            MediaQuery.of(context).size.width *
+                                                0.015,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                IconButton(
-                                  onPressed: viewModel.nextDoc,
-                                  padding: EdgeInsets.zero,
-                                  icon: const Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 48,
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
               ),
             ],
