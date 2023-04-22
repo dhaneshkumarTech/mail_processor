@@ -5,18 +5,17 @@ import 'package:mailer/smtp_server.dart';
 
 class EmailService {
   Future<void> sendEmailWithAttachment(File file, String recipientEmail) async {
-    // Create an SMTP server configuration
-    final smtpServer = gmail('mbilalofficial.pk@gmail.com', 'cqepjkxlpaksklds');
+    final smtpServer =
+        gmail('mailnotifications@wallstreetmailboxes.com', 'cfqejlgjchakopra');
 
-    // Create a message
     final message = Message()
-      ..from = const Address('mbilalofficial.pk@gmail.com', 'Private Mail')
+      ..from = const Address(
+          'mailnotifications@wallstreetmailboxes.com', 'Wall Street Mailboxes')
       ..recipients.add(recipientEmail)
-      ..subject = 'Email with Attachment'
+      ..subject = 'Attachment from Wall Street Mailboxes'
       ..text = 'Please see the attached file'
       ..attachments.add(FileAttachment(file));
 
-    // Send the message using the SMTP server
     try {
       await send(message, smtpServer);
     } on MailerException catch (e) {
