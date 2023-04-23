@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mail_processor/ui/common/ui_helpers.dart';
 import 'package:stacked/stacked.dart';
-import 'package:pdfx/pdfx.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import 'home_viewmodel.dart';
 
@@ -65,7 +65,7 @@ class HomeView extends StackedView<HomeViewModel> {
                   ),
                 ),
                 child: ListView.builder(
-                  itemCount: viewModel.controllers.length,
+                  itemCount: viewModel.files.length,
                   itemBuilder: (context, index) => GestureDetector(
                     onTap: () => viewModel.onUpdate(index),
                     child: Container(
@@ -76,16 +76,8 @@ class HomeView extends StackedView<HomeViewModel> {
                         vertical: 5,
                       ),
                       color: Colors.grey,
-                      child: PdfView(
-                        builders: PdfViewBuilders<DefaultBuilderOptions>(
-                          options: const DefaultBuilderOptions(),
-                          documentLoaderBuilder: (_) =>
-                              const Center(child: CircularProgressIndicator()),
-                          errorBuilder: (_, __) => const Center(
-                            child: Text('Error'),
-                          ),
-                        ),
-                        controller: viewModel.controllers[index],
+                      child: SfPdfViewer.file(
+                        viewModel.files[index],
                       ),
                     ),
                   ),
@@ -93,7 +85,7 @@ class HomeView extends StackedView<HomeViewModel> {
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
-                child: viewModel.controllers.isEmpty
+                child: viewModel.files.isEmpty
                     ? const Center(
                         child: Text('No files selected'),
                       )
@@ -143,61 +135,40 @@ class HomeView extends StackedView<HomeViewModel> {
                                 ],
                               ),
                             ),
-                            InteractiveViewer(
-                              panEnabled: true,
-                              minScale: 0.5,
-                              maxScale: 2,
-                              child: SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.8,
-                                width: double.infinity,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      onPressed: viewModel.previousDoc,
-                                      padding: EdgeInsets.zero,
-                                      icon: Icon(
-                                        Icons.arrow_back_ios,
-                                        size:
-                                            MediaQuery.of(context).size.width *
-                                                0.015,
-                                      ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.8,
+                              width: double.infinity,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    onPressed: viewModel.previousDoc,
+                                    padding: EdgeInsets.zero,
+                                    icon: Icon(
+                                      Icons.arrow_back_ios,
+                                      size: MediaQuery.of(context).size.width *
+                                          0.015,
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.65,
-                                      color: Colors.white,
-                                      padding: const EdgeInsets.all(30),
-                                      child: PdfView(
-                                        builders: PdfViewBuilders<
-                                            DefaultBuilderOptions>(
-                                          options:
-                                              const DefaultBuilderOptions(),
-                                          documentLoaderBuilder: (_) =>
-                                              const Center(
-                                                  child:
-                                                      CircularProgressIndicator()),
-                                          errorBuilder: (_, __) => const Center(
-                                            child: Text('Error'),
-                                          ),
-                                        ),
-                                        controller: viewModel
-                                            .controllers[viewModel.currentFile],
-                                      ),
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.65,
+                                    color: Colors.white,
+                                    padding: const EdgeInsets.all(30),
+                                    child: SfPdfViewer.file(
+                                      viewModel.files[viewModel.currentFile],
                                     ),
-                                    IconButton(
-                                      onPressed: viewModel.nextDoc,
-                                      padding: EdgeInsets.zero,
-                                      icon: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size:
-                                            MediaQuery.of(context).size.width *
-                                                0.015,
-                                      ),
+                                  ),
+                                  IconButton(
+                                    onPressed: viewModel.nextDoc,
+                                    padding: EdgeInsets.zero,
+                                    icon: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: MediaQuery.of(context).size.width *
+                                          0.015,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
