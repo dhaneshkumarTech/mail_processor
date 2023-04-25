@@ -16,6 +16,7 @@ class HomeView extends StackedView<HomeViewModel> {
   ) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 5,
         centerTitle: true,
         title: const Text('Mail Processor'),
         actions: [

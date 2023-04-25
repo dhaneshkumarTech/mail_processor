@@ -13,6 +13,11 @@ class SettingsView extends StackedView<SettingsViewModel> {
     Widget? child,
   ) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 5,
+        centerTitle: true,
+        title: const Text('Settings'),
+      ),
       body: Container(
         padding: const EdgeInsets.only(left: 25.0, right: 25.0),
       ),
