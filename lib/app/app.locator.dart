@@ -13,6 +13,7 @@ import 'package:stacked_shared/stacked_shared.dart';
 
 import '../services/email_service.dart';
 import '../services/file_picker_service.dart';
+import '../ui/views/home/home_viewmodel.dart';
 
 final locator = StackedLocator.instance;
 
@@ -30,4 +31,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => FilePickerService());
   locator.registerLazySingleton(() => EmailService());
+  locator.registerSingleton(HomeViewModel());
 }

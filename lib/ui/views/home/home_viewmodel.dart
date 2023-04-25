@@ -54,7 +54,6 @@ class HomeViewModel extends BaseViewModel {
         notifyListeners();
       } on Exception catch (e) {
         await _dialogService.showDialog(
-          dialogPlatform: DialogPlatform.Material,
           title: 'Error',
           description: e.toString(),
         );
@@ -63,6 +62,13 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void processfile() async {
+    if (csvData.isEmpty) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'Please import emails',
+      );
+      return;
+    }
     await moveFile();
     await emailFile();
     removeFile();
@@ -77,14 +83,6 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> moveFile() async {
-    if (csvData.isEmpty) {
-      await _dialogService.showDialog(
-        title: 'Error',
-        description: 'Please import emails',
-        dialogPlatform: DialogPlatform.Material,
-      );
-      return;
-    }
     try {
       await runBusyFuture(
         filePickerService.moveFileToFolder(
@@ -110,13 +108,11 @@ class HomeViewModel extends BaseViewModel {
       await _dialogService.showDialog(
         title: 'Success',
         description: 'File moved and email sent successfully',
-        dialogPlatform: DialogPlatform.Material,
       );
     } on Exception catch (e) {
       await _dialogService.showDialog(
         title: 'Error',
         description: e.toString(),
-        dialogPlatform: DialogPlatform.Material,
       );
       return;
     }

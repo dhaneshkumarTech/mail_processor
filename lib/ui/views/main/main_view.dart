@@ -14,38 +14,45 @@ class MainView extends StackedView<MainViewModel> {
     MainViewModel viewModel,
     Widget? child,
   ) {
-    return Scaffold(
-      body: Row(
-        children: [
-          NavigationRail(
-            destinations: const [
-              NavigationRailDestination(
-                icon: Icon(Icons.home_outlined),
-                label: Text('Home'),
-                selectedIcon: Icon(Icons.home),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.settings_outlined),
-                label: Text('Settings'),
-                selectedIcon: Icon(Icons.settings),
-              ),
-            ],
-            selectedIndex: viewModel.currentIndex,
-            onDestinationSelected: viewModel.setIndex,
-          ),
-          const VerticalDivider(thickness: 1, width: 1),
-          Expanded(
-            child: PageView(
-              controller: viewModel.pageController,
-              onPageChanged: viewModel.setIndex,
-              children: const [
-                HomeView(),
-                SettingsView(),
-              ],
+    return Row(
+      children: [
+        NavigationRail(
+          extended: true,
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.asset(
+              'assets/icon.png',
+              height: 128,
             ),
           ),
-        ],
-      ),
+          destinations: const [
+            NavigationRailDestination(
+              icon: Icon(Icons.home_outlined),
+              label: Text('Home'),
+              selectedIcon: Icon(Icons.home),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.settings_outlined),
+              label: Text('Settings'),
+              selectedIcon: Icon(Icons.settings),
+            ),
+          ],
+          selectedIndex: viewModel.currentIndex,
+          onDestinationSelected: viewModel.setIndex,
+        ),
+        const VerticalDivider(thickness: 1, width: 1),
+        Expanded(
+          child: PageView(
+            controller: viewModel.pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            onPageChanged: viewModel.setIndex,
+            children: const [
+              HomeView(),
+              SettingsView(),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
