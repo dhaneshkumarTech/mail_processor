@@ -7,7 +7,6 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class FilePickerService {
-
   Future<List<File>?> getFiles(bool multiple) async {
     try {
       final files = await FilePicker.platform.pickFiles(

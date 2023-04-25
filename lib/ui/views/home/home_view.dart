@@ -16,9 +16,10 @@ class HomeView extends StackedView<HomeViewModel> {
   ) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Mail Processor'),
         actions: [
-          ElevatedButton(
+          TextButton(
             onPressed: viewModel.pickFiles,
             child: Row(
               children: [
@@ -33,7 +34,7 @@ class HomeView extends StackedView<HomeViewModel> {
               ],
             ),
           ),
-          ElevatedButton(
+          TextButton(
             onPressed: viewModel.pickCsv,
             child: Row(
               children: [
@@ -59,10 +60,8 @@ class HomeView extends StackedView<HomeViewModel> {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width * 0.2,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey,
-                  ),
+                decoration: const BoxDecoration(
+                  border: Border(right: BorderSide(color: Colors.grey)),
                 ),
                 child: ListView.builder(
                   itemCount: viewModel.files.length,
@@ -117,8 +116,8 @@ class HomeView extends StackedView<HomeViewModel> {
                                   horizontalSpaceSmall,
                                   viewModel.isBusy
                                       ? const CircularProgressIndicator()
-                                      : ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
+                                      : TextButton(
+                                          style: TextButton.styleFrom(
                                             minimumSize: const Size(100, 55),
                                             shape: const RoundedRectangleBorder(
                                               borderRadius: BorderRadius.all(
@@ -141,31 +140,41 @@ class HomeView extends StackedView<HomeViewModel> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  IconButton(
-                                    onPressed: viewModel.previousDoc,
-                                    padding: EdgeInsets.zero,
-                                    icon: Icon(
-                                      Icons.arrow_back_ios,
-                                      size: MediaQuery.of(context).size.width *
-                                          0.015,
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 5,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: IconButton(
+                                      onPressed: viewModel.previousDoc,
+                                      icon: const Icon(
+                                        Icons.arrow_back_ios,
+                                      ),
                                     ),
                                   ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.65,
-                                    color: Colors.white,
-                                    padding: const EdgeInsets.all(30),
+                                  horizontalSpaceMedium,
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.6,
                                     child: SfPdfViewer.file(
                                       viewModel.files[viewModel.currentFile],
                                     ),
                                   ),
-                                  IconButton(
-                                    onPressed: viewModel.nextDoc,
-                                    padding: EdgeInsets.zero,
-                                    icon: Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: MediaQuery.of(context).size.width *
-                                          0.015,
+                                  horizontalSpaceMedium,
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 5,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: IconButton(
+                                      onPressed: viewModel.nextDoc,
+                                      icon: const Icon(
+                                        Icons.arrow_forward_ios,
+                                      ),
                                     ),
                                   ),
                                 ],

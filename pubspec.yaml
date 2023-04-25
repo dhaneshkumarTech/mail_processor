@@ -43,6 +43,7 @@ dependencies:
   csv: ^5.0.1
   path: ^1.8.2
   syncfusion_flutter_pdfviewer: ^21.1.41
+  shared_preferences: ^2.1.0
 
 dev_dependencies:
   flutter_test:
