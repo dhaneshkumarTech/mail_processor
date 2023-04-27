@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:csv/csv.dart';
 import 'package:mail_processor/models/csv_data.dart';
 import 'package:path/path.dart' as p;
@@ -34,7 +35,6 @@ class FilePickerService {
           .transform(const CsvToListConverter())
           .toList();
 
-      // convert fields to CsvData
       fields.removeAt(0);
       List<CsvData> tempFields = [];
       for (var field in fields) {
@@ -67,5 +67,17 @@ class FilePickerService {
     final folder = await createFolderIfNotExists(folderName);
     final newFilePath = p.join(folder.path, p.basename(file.path));
     await file.rename(newFilePath);
+  }
+
+  Future<String?> getFolderPath() async {
+    String? directoryPath = await getDirectoryPath(
+      confirmButtonText: 'Select Folder',
+    );
+
+    if (directoryPath != null) {
+      return directoryPath;
+    } else {
+      return null;
+    }
   }
 }

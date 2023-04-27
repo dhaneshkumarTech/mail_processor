@@ -162,16 +162,16 @@ class HomeView extends StackedView<HomeViewModel> {
                       ),
                       Expanded(
                         flex: 3,
-                        child: InteractiveViewer(
-                          child: Container(
-                            width: screenWidth(context) / 2,
-                            height: screenHeight(context) / 2,
-                            margin: const EdgeInsets.all(8.0),
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
+                        child: Container(
+                          width: screenWidth(context) / 2,
+                          height: screenHeight(context) / 2,
+                          margin: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: InteractiveViewer(
                             child: SfPdfViewer.file(
                               viewModel.files[viewModel.currentFile],
                             ),

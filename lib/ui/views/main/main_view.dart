@@ -18,11 +18,12 @@ class MainView extends StackedView<MainViewModel> {
       children: [
         NavigationRail(
           extended: true,
+          minExtendedWidth: 180,
           leading: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Image.asset(
               'assets/icon.png',
-              height: 128,
+              height: 64,
             ),
           ),
           destinations: const [
