@@ -71,7 +71,7 @@ class HomeViewModel extends BaseViewModel {
       );
       return;
     }
-    final folderPath = sp.getString('folderPath');
+    final folderPath = sp.getString('controller4');
     if (folderPath == null) {
       await _dialogService.showDialog(
         title: 'Error',
