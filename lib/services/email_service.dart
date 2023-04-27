@@ -4,7 +4,7 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
 class EmailService {
-  Future<void> sendEmailWithAttachment(File file, String email, String password,
+  Future<bool> sendEmailWithAttachment(File file, String email, String password,
       String subject, String text, String recipientEmail) async {
     final smtpServer = gmail(email, password);
 
@@ -17,8 +17,9 @@ class EmailService {
 
     try {
       await send(message, smtpServer);
-    } on MailerException catch (e) {
-      throw Exception('Message not sent. $e');
+      return true;
+    } on Exception {
+      return false;
     }
   }
 }

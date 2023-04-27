@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:mail_processor/app/app.locator.dart';
@@ -133,9 +134,6 @@ class HomeViewModel extends BaseViewModel {
 
     await moveFile(folderPath);
     await emailFile(recipientEmail, email, password, subject, text);
-
-    files.removeAt(currentFile);
-    notifyListeners();
   }
 
   Future<void> moveFile(String folderPath) async {
@@ -159,7 +157,7 @@ class HomeViewModel extends BaseViewModel {
   Future<void> emailFile(String recipientEmail, String email, String password,
       String subject, String text) async {
     try {
-      await runBusyFuture(emailService.sendEmailWithAttachment(
+      final result = await runBusyFuture(emailService.sendEmailWithAttachment(
         files[currentFile],
         email,
         password,
@@ -167,11 +165,20 @@ class HomeViewModel extends BaseViewModel {
         text,
         recipientEmail,
       ));
-      _snackbarService.showSnackbar(
-        title: 'Success',
-        message:
-            'The file has been moved successfully. An email has been sent to $recipientEmail with the file attached.',
-      );
+      if (result) {
+        _snackbarService.showSnackbar(
+          title: 'Success',
+          message:
+              'The file has been moved successfully. An email has been sent to $recipientEmail with the file attached.',
+        );
+        files.removeAt(currentFile);
+        notifyListeners();
+      } else {
+        await _dialogService.showDialog(
+          title: 'Error',
+          description: 'An error occurred while sending the email',
+        );
+      }
     } on Exception catch (e) {
       await _dialogService.showDialog(
         title: 'Error',
