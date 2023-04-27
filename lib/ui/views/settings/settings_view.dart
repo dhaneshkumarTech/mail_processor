@@ -84,7 +84,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
                   controller: viewModel.controllers[4],
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Add Folder Path',
+                    hintText: 'Add Folder Path To Store Processed PDFs',
                     prefixIcon: Icon(Icons.folder_shared),
                     contentPadding: EdgeInsets.zero,
                   ),
