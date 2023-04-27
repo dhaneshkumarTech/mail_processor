@@ -71,7 +71,8 @@ class HomeViewModel extends BaseViewModel {
       );
       return;
     }
-    final folderPath = sp.getString('folderPath');
+
+    final folderPath = sp.getString('controller4');
     if (folderPath == null) {
       await _dialogService.showDialog(
         title: 'Error',
@@ -79,13 +80,51 @@ class HomeViewModel extends BaseViewModel {
       );
       return;
     }
-    final email = csvData
+
+    final email = sp.getString('controller0');
+    if (email!.isEmpty) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'Please enter an email in settings view first',
+      );
+      return;
+    }
+
+    final password = sp.getString('controller1');
+
+    if (password!.isEmpty) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'Please enter a password in settings view first',
+      );
+      return;
+    }
+
+    final subject = sp.getString('controller2');
+    if (subject!.isEmpty) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'Please enter a subject in settings view first',
+      );
+      return;
+    }
+
+    final text = sp.getString('controller3');
+    if (text!.isEmpty) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'Please enter a text in settings view first',
+      );
+      return;
+    }
+
+    final recipientEmail = csvData
         .firstWhere(
           (element) => element.unitNumber == unitNumber,
           orElse: () => CsvData(email: '', unitNumber: ''),
         )
         .email;
-    if (email.isEmpty) {
+    if (recipientEmail.isEmpty) {
       await _dialogService.showDialog(
         title: 'Error',
         description: 'No email found for unit number $unitNumber',
@@ -94,7 +133,8 @@ class HomeViewModel extends BaseViewModel {
     }
 
     await moveFile(folderPath);
-    await emailFile(email);
+    await emailFile(recipientEmail, email, password, subject, text);
+
     files.removeAt(currentFile);
     notifyListeners();
   }
@@ -117,16 +157,21 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> emailFile(String email) async {
+  Future<void> emailFile(String recipientEmail, String email, String password,
+      String subject, String text) async {
     try {
       await runBusyFuture(emailService.sendEmailWithAttachment(
         files[currentFile],
         email,
+        password,
+        subject,
+        text,
+        recipientEmail,
       ));
       _snackbarService.showSnackbar(
         title: 'Success',
         message:
-            'The file has been moved successfully. An email has been sent to $email with the file attached.',
+            'The file has been moved successfully. An email has been sent to $recipientEmail with the file attached.',
       );
     } on Exception catch (e) {
       await _dialogService.showDialog(
