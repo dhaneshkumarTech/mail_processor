@@ -46,13 +46,13 @@ class SettingsView extends StackedView<SettingsViewModel> {
                     hintText: 'Password',
                     prefixIcon: const Icon(Icons.lock),
                     contentPadding: EdgeInsets.zero,
-                    suffix: GestureDetector(
-                      child: Icon(
+                    suffix: IconButton(
+                      icon: Icon(
                         viewModel.obscureText
                             ? Icons.visibility
                             : Icons.visibility_off,
                       ),
-                      onTap: viewModel.toggleObscureText,
+                      onPressed: viewModel.toggleObscureText,
                     ),
                   ),
                   obscureText: viewModel.obscureText,

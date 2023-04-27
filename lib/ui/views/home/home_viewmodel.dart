@@ -145,46 +145,43 @@ class HomeViewModel extends BaseViewModel {
           unitNumber,
         ),
       );
-    } on Exception catch (e) {
+      _snackbarService.showSnackbar(
+        message:
+            'The file has been moved successfully. You can find it in $folderPath',
+      );
+    } catch (e) {
       await _dialogService.showDialog(
         title: 'Error',
         description: e.toString(),
       );
-      return;
     }
   }
 
   Future<void> emailFile(String recipientEmail, String email, String password,
       String subject, String text) async {
-    try {
-      final result = await runBusyFuture(emailService.sendEmailWithAttachment(
+    final result = await runBusyFuture(
+      emailService.sendEmailWithAttachment(
         files[currentFile],
         email,
         password,
         subject,
         text,
         recipientEmail,
-      ));
-      if (result) {
-        _snackbarService.showSnackbar(
-          title: 'Success',
-          message:
-              'The file has been moved successfully. An email has been sent to $recipientEmail with the file attached.',
-        );
-        files.removeAt(currentFile);
-        notifyListeners();
-      } else {
-        await _dialogService.showDialog(
-          title: 'Error',
-          description: 'An error occurred while sending the email',
-        );
-      }
-    } on Exception catch (e) {
+      ),
+    );
+    if (result) {
+      await _dialogService.showDialog(
+        title: 'Success',
+        description:
+            'An email has been sent to $recipientEmail with the file attached.',
+      );
+      files.removeAt(currentFile);
+      notifyListeners();
+    } else {
       await _dialogService.showDialog(
         title: 'Error',
-        description: e.toString(),
+        description: 'An error occurred while sending the email. Please check your credentials.',
       );
-      return;
     }
   }
 }

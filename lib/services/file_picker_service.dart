@@ -57,18 +57,26 @@ class FilePickerService {
     final processedfolderPath = p.join(folderPath, folderName);
     final folder = Directory(processedfolderPath);
 
-    if (!await folder.exists()) {
-      return await folder.create(recursive: true);
-    } else {
-      return folder;
+    try {
+      if (!await folder.exists()) {
+        return await folder.create(recursive: true);
+      } else {
+        return folder;
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
   Future<void> moveFileToFolder(
       File file, String folderPath, String folderName) async {
-    final folder = await createFolderIfNotExists(folderPath, folderName);
-    final newFilePath = p.join(folder.path, p.basename(file.path));
-    await file.rename(newFilePath);
+    try {
+      final folder = await createFolderIfNotExists(folderPath, folderName);
+      final newFilePath = p.join(folder.path, p.basename(file.path));
+      await file.rename(newFilePath);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<String?> getFolderPath() async {
