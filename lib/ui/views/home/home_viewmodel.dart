@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:mail_processor/app/app.locator.dart';
+import 'package:mail_processor/main.dart';
 import 'package:mail_processor/models/csv_data.dart';
 import 'package:mail_processor/services/email_service.dart';
 import 'package:mail_processor/services/file_picker_service.dart';
@@ -11,6 +12,7 @@ class HomeViewModel extends BaseViewModel {
   final filePickerService = locator<FilePickerService>();
   final emailService = locator<EmailService>();
   final _dialogService = locator<DialogService>();
+  final _snackbarService = locator<SnackbarService>();
 
   List<File> files = [];
   List<CsvData> csvData = [];
@@ -69,24 +71,40 @@ class HomeViewModel extends BaseViewModel {
       );
       return;
     }
-    await moveFile();
-    await emailFile();
-    removeFile();
-  }
-
-  void removeFile() {
-    files.removeAt(currentFile);
-    if (currentFile == files.length) {
-      currentFile = 0;
+    final folderPath = sp.getString('folderPath');
+    if (folderPath == null) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'Please select a folder path in settings view first',
+      );
+      return;
     }
+    final email = csvData
+        .firstWhere(
+          (element) => element.unitNumber == unitNumber,
+          orElse: () => CsvData(email: '', unitNumber: ''),
+        )
+        .email;
+    if (email.isEmpty) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'No email found for unit number $unitNumber',
+      );
+      return;
+    }
+
+    await moveFile(folderPath);
+    await emailFile(email);
+    files.removeAt(currentFile);
     notifyListeners();
   }
 
-  Future<void> moveFile() async {
+  Future<void> moveFile(String folderPath) async {
     try {
       await runBusyFuture(
         filePickerService.moveFileToFolder(
           files[currentFile],
+          folderPath,
           unitNumber,
         ),
       );
@@ -99,15 +117,16 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> emailFile() async {
+  Future<void> emailFile(String email) async {
     try {
       await runBusyFuture(emailService.sendEmailWithAttachment(
         files[currentFile],
-        csvData.firstWhere((element) => element.unitNumber == unitNumber).email,
+        email,
       ));
-      await _dialogService.showDialog(
+      _snackbarService.showSnackbar(
         title: 'Success',
-        description: 'File moved and email sent successfully',
+        message:
+            'The file has been moved successfully. An email has been sent to $email with the file attached.',
       );
     } on Exception catch (e) {
       await _dialogService.showDialog(

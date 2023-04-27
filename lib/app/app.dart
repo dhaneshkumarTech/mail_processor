@@ -21,6 +21,7 @@ import 'package:mail_processor/ui/views/main/main_view.dart';
     LazySingleton(classType: BottomSheetService),
     LazySingleton(classType: DialogService),
     LazySingleton(classType: NavigationService),
+    LazySingleton(classType: SnackbarService),
     LazySingleton(classType: FilePickerService),
     LazySingleton(classType: EmailService),
     Singleton(classType: HomeViewModel),

@@ -5,7 +5,6 @@ import 'package:file_selector/file_selector.dart';
 import 'package:csv/csv.dart';
 import 'package:mail_processor/models/csv_data.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 class FilePickerService {
   Future<List<File>?> getFiles(bool multiple) async {
@@ -51,10 +50,12 @@ class FilePickerService {
     }
   }
 
-  Future<Directory> createFolderIfNotExists(String folderName) async {
-    final appDir = await getDownloadsDirectory();
-    final folderPath = p.join(appDir!.path, folderName);
-    final folder = Directory(folderPath);
+  Future<Directory> createFolderIfNotExists(
+    String folderPath,
+    String folderName,
+  ) async {
+    final processedfolderPath = p.join(folderPath, folderName);
+    final folder = Directory(processedfolderPath);
 
     if (!await folder.exists()) {
       return await folder.create(recursive: true);
@@ -63,8 +64,9 @@ class FilePickerService {
     }
   }
 
-  Future<void> moveFileToFolder(File file, String folderName) async {
-    final folder = await createFolderIfNotExists(folderName);
+  Future<void> moveFileToFolder(
+      File file, String folderPath, String folderName) async {
+    final folder = await createFolderIfNotExists(folderPath, folderName);
     final newFilePath = p.join(folder.path, p.basename(file.path));
     await file.rename(newFilePath);
   }

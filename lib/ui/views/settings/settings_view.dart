@@ -80,25 +80,14 @@ class SettingsView extends StackedView<SettingsViewModel> {
                   maxLines: null,
                 ),
                 verticalSpaceMedium,
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await viewModel.fetchFolderPath();
-                    },
-                    child: viewModel.isBusy
-                        ? const CircularProgressIndicator.adaptive()
-                        : Text(
-                            viewModel.folderPath == null
-                                ? 'Import Folder Path'
-                                : viewModel.folderPath!,
-                          ),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32.0),
-                      ),
-                    ),
+                TextField(
+                  controller: viewModel.controllers[4],
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.folder_open),
+                    contentPadding: EdgeInsets.zero,
                   ),
+                  onTap: viewModel.fetchFolderPath,
                 ),
                 verticalSpaceLarge,
                 ElevatedButton(
@@ -109,9 +98,9 @@ class SettingsView extends StackedView<SettingsViewModel> {
                       ? const CircularProgressIndicator.adaptive()
                       : const Text('Save'),
                   style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(200, 60),
+                    minimumSize: const Size(double.infinity, 60),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0),
+                      borderRadius: BorderRadius.circular(0),
                     ),
                   ),
                 ),
