@@ -132,7 +132,7 @@ class HomeViewModel extends BaseViewModel {
         title: 'Error',
         message: 'No email found for unit number $unitNumber',
       );
-      await moveFile(folderPath, '000');
+      await moveFile(folderPath, unitNumber);
     } else {
       await moveFile(folderPath, unitNumber);
 
