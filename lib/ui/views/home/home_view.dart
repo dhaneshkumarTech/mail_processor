@@ -22,7 +22,7 @@ class HomeView extends StackedView<HomeViewModel> {
         title: const Text('Home'),
         actions: [
           TextButton(
-            onPressed: viewModel.pickFiles,
+            onPressed: () => viewModel.pickFiles(context),
             child: Row(
               children: [
                 const Icon(Icons.attach_file),
@@ -70,15 +70,18 @@ class HomeView extends StackedView<HomeViewModel> {
                     children: [
                       SizedBox(
                         width: screenWidth(context) * 0.25,
-                        child: TextFormField(
-                          controller: viewModel.unitNumberController,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Unit Number',
+                        child: FocusScope(
+                          child: TextFormField(
+                            controller: viewModel.unitNumberController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Unit Number',
+                            ),
+                            focusNode: viewModel.unitNumberFocusNode,
+                            enabled: viewModel.isBusy ? false : true,
+                            onFieldSubmitted: (value) =>
+                                viewModel.processfile(),
                           ),
-                          focusNode: viewModel.unitNumberFocusNode,
-                          enabled: viewModel.isBusy ? false : true,
-                          onFieldSubmitted: (value) => viewModel.processfile(),
                         ),
                       ),
                       horizontalSpaceSmall,
@@ -91,7 +94,13 @@ class HomeView extends StackedView<HomeViewModel> {
                                   borderRadius: BorderRadius.circular(3),
                                 ),
                               ),
-                              onPressed: () => viewModel.processfile(),
+                              onPressed: () {
+                                if (!viewModel.unitNumberFocusNode.hasFocus) {
+                                  FocusScope.of(context).requestFocus(
+                                      viewModel.unitNumberFocusNode);
+                                }
+                                viewModel.processfile();
+                              },
                               child: const Text('Send'),
                             ),
                     ],

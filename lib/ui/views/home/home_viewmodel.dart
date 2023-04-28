@@ -39,10 +39,13 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void pickFiles() async {
+  void pickFiles(BuildContext context) async {
     final resultFiles = await filePickerService.getFiles(true);
     if (resultFiles != null) {
       files = resultFiles;
+      if (!unitNumberFocusNode.hasFocus) {
+        FocusScope.of(context).requestFocus(unitNumberFocusNode);
+      }
       notifyListeners();
     }
   }
@@ -128,7 +131,9 @@ class HomeViewModel extends BaseViewModel {
           orElse: () => CsvData(email: '', unitNumber: ''),
         )
         .email;
+
     await moveFile(folderPath, unitNumber);
+
     if (recipientEmail.isEmpty) {
       _snackbarService.showSnackbar(
         title: 'Error',
@@ -137,8 +142,6 @@ class HomeViewModel extends BaseViewModel {
     } else {
       await emailFile(recipientEmail, email, password, subject, text);
     }
-
-    unitNumberFocusNode.requestFocus();
 
     files.removeAt(currentFile);
     notifyListeners();
