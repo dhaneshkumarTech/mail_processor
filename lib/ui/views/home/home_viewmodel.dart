@@ -18,6 +18,7 @@ class HomeViewModel extends BaseViewModel {
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController unitNumberController = TextEditingController();
+  FocusNode unitNumberFocusNode = FocusNode();
 
   List<File> files = [];
   List<CsvData> csvData = [];
@@ -127,25 +128,17 @@ class HomeViewModel extends BaseViewModel {
           orElse: () => CsvData(email: '', unitNumber: ''),
         )
         .email;
+    await moveFile(folderPath, unitNumber);
     if (recipientEmail.isEmpty) {
       _snackbarService.showSnackbar(
         title: 'Error',
         message: 'No email found for unit number $unitNumber',
       );
-      await moveFile(folderPath, unitNumber);
-      unitNumberController.clear();
     } else {
-      await moveFile(folderPath, unitNumber);
-
-      files[currentFile] = File(
-        '$folderPath/$unitNumber/${files[currentFile].path.split('/').last}',
-      );
-      notifyListeners();
-
       await emailFile(recipientEmail, email, password, subject, text);
-
-      unitNumberController.clear();
     }
+
+    unitNumberFocusNode.requestFocus();
 
     files.removeAt(currentFile);
     notifyListeners();
@@ -164,6 +157,7 @@ class HomeViewModel extends BaseViewModel {
         message:
             'The file has been moved successfully. You can find it in $folderPath/$unitNumber',
       );
+      unitNumberController.clear();
     } catch (e) {
       await _dialogService.showDialog(
         title: 'Error',

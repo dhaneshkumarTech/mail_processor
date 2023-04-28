@@ -76,6 +76,7 @@ class HomeView extends StackedView<HomeViewModel> {
                             border: OutlineInputBorder(),
                             labelText: 'Unit Number',
                           ),
+                          focusNode: viewModel.unitNumberFocusNode,
                           enabled: viewModel.isBusy ? false : true,
                           onFieldSubmitted: (value) => viewModel.processfile(),
                         ),
