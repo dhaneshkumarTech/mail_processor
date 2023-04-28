@@ -64,6 +64,27 @@ class HomeView extends StackedView<HomeViewModel> {
             children: [
               verticalSpaceSmall,
               if (viewModel.files.isNotEmpty)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: viewModel.previousDoc,
+                      icon: const Icon(Icons.arrow_back),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'File ${viewModel.currentFile + 1}/${viewModel.files.length}',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: viewModel.nextDoc,
+                      icon: const Icon(Icons.arrow_forward),
+                    ),
+                  ],
+                ),
+              if (viewModel.files.isNotEmpty)
                 Form(
                   key: viewModel.formKey,
                   child: Row(
@@ -103,27 +124,6 @@ class HomeView extends StackedView<HomeViewModel> {
                   ),
                 ),
               verticalSpaceSmall,
-              if (viewModel.files.isNotEmpty)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: viewModel.previousDoc,
-                      icon: const Icon(Icons.arrow_back),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'File ${viewModel.currentFile + 1}/${viewModel.files.length}',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: viewModel.nextDoc,
-                      icon: const Icon(Icons.arrow_forward),
-                    ),
-                  ],
-                ),
               if (viewModel.files.isNotEmpty)
                 SizedBox(
                   height: screenHeight(context) * 0.8,
