@@ -63,18 +63,34 @@ class HomeView extends StackedView<HomeViewModel> {
             children: [
               if (viewModel.files.isNotEmpty) verticalSpaceSmall,
               if (viewModel.files.isNotEmpty)
-                SizedBox(
-                  width: screenWidth(context) * 0.25,
-                  child: Form(
-                    key: viewModel.formKey,
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Unit Number',
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                Form(
+                  key: viewModel.formKey,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: screenWidth(context) * 0.25,
+                        child: TextFormField(
+                          controller: viewModel.unitNumberController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Unit Number',
+                          ),
+                          onFieldSubmitted: (value) => viewModel.processfile(),
+                        ),
                       ),
-                      onFieldSubmitted: (value) => viewModel.processfile(value),
-                    ),
+                      horizontalSpaceSmall,
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(100, 64),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                        onPressed: () => viewModel.processfile(),
+                        child: const Text('Send'),
+                      ),
+                    ],
                   ),
                 ),
               verticalSpaceSmall,

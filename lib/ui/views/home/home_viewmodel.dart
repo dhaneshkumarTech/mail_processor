@@ -17,6 +17,7 @@ class HomeViewModel extends BaseViewModel {
   final _snackbarService = locator<SnackbarService>();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController unitNumberController = TextEditingController();
 
   List<File> files = [];
   List<CsvData> csvData = [];
@@ -60,7 +61,13 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  void processfile(String unitNumber) async {
+  void processfile() async {
+    final unitNumber = unitNumberController.text;
+
+    if (unitNumber.isEmpty) {
+      return;
+    }
+
     if (csvData.isEmpty) {
       await _dialogService.showDialog(
         title: 'Error',
@@ -133,7 +140,7 @@ class HomeViewModel extends BaseViewModel {
         '$folderPath/$unitNumber/${files[currentFile].path.split('/').last}',
       );
       notifyListeners();
-      
+
       await emailFile(recipientEmail, email, password, subject, text);
     }
 
@@ -162,8 +169,13 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> emailFile(String recipientEmail, String email, String password,
-      String subject, String text) async {
+  Future<void> emailFile(
+    String recipientEmail,
+    String email,
+    String password,
+    String subject,
+    String text,
+  ) async {
     final result = await runBusyFuture(
       emailService.sendEmailWithAttachment(
         files[currentFile],
