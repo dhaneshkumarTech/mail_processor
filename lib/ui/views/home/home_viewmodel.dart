@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:mail_processor/app/app.locator.dart';
 import 'package:mail_processor/main.dart';
 import 'package:mail_processor/models/csv_data.dart';
@@ -15,16 +16,11 @@ class HomeViewModel extends BaseViewModel {
   final _dialogService = locator<DialogService>();
   final _snackbarService = locator<SnackbarService>();
 
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   List<File> files = [];
   List<CsvData> csvData = [];
   int currentFile = 0;
-
-  String unitNumber = '';
-
-  void onChangedText(String value) {
-    unitNumber = value;
-    notifyListeners();
-  }
 
   void onUpdate(int index) {
     currentFile = index;
@@ -64,7 +60,7 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  void processfile() async {
+  void processfile(String unitNumber) async {
     if (csvData.isEmpty) {
       await _dialogService.showDialog(
         title: 'Error',
@@ -125,18 +121,27 @@ class HomeViewModel extends BaseViewModel {
         )
         .email;
     if (recipientEmail.isEmpty) {
-      await _dialogService.showDialog(
+      _snackbarService.showSnackbar(
         title: 'Error',
-        description: 'No email found for unit number $unitNumber',
+        message: 'No email found for unit number $unitNumber',
       );
-      return;
+      await moveFile(folderPath, '000');
+    } else {
+      await moveFile(folderPath, unitNumber);
+
+      files[currentFile] = File(
+        '$folderPath/$unitNumber/${files[currentFile].path.split('/').last}',
+      );
+      notifyListeners();
+      
+      await emailFile(recipientEmail, email, password, subject, text);
     }
 
-    await moveFile(folderPath);
-    await emailFile(recipientEmail, email, password, subject, text);
+    files.removeAt(currentFile);
+    notifyListeners();
   }
 
-  Future<void> moveFile(String folderPath) async {
+  Future<void> moveFile(String folderPath, String unitNumber) async {
     try {
       await runBusyFuture(
         filePickerService.moveFileToFolder(
@@ -147,7 +152,7 @@ class HomeViewModel extends BaseViewModel {
       );
       _snackbarService.showSnackbar(
         message:
-            'The file has been moved successfully. You can find it in $folderPath',
+            'The file has been moved successfully. You can find it in $folderPath/$unitNumber',
       );
     } catch (e) {
       await _dialogService.showDialog(
@@ -175,12 +180,11 @@ class HomeViewModel extends BaseViewModel {
         description:
             'An email has been sent to $recipientEmail with the file attached.',
       );
-      files.removeAt(currentFile);
-      notifyListeners();
     } else {
       await _dialogService.showDialog(
         title: 'Error',
-        description: 'An error occurred while sending the email. Please check your credentials.',
+        description:
+            'An error occurred while sending the email. Please check your credentials.',
       );
     }
   }

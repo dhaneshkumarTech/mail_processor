@@ -63,39 +63,19 @@ class HomeView extends StackedView<HomeViewModel> {
             children: [
               if (viewModel.files.isNotEmpty) verticalSpaceSmall,
               if (viewModel.files.isNotEmpty)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 200,
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Unit Number',
-                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: viewModel.onChangedText,
+                SizedBox(
+                  width: screenWidth(context) * 0.25,
+                  child: Form(
+                    key: viewModel.formKey,
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Unit Number',
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
                       ),
+                      onFieldSubmitted: (value) => viewModel.processfile(value),
                     ),
-                    horizontalSpaceSmall,
-                    viewModel.isBusy
-                        ? const CircularProgressIndicator()
-                        : TextButton(
-                            style: TextButton.styleFrom(
-                              minimumSize: const Size(100, 55),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(2),
-                                ),
-                              ),
-                            ),
-                            onPressed: viewModel.unitNumber.isEmpty
-                                ? null
-                                : viewModel.processfile,
-                            child: const Text('Send'),
-                          ),
-                  ],
+                  ),
                 ),
               verticalSpaceSmall,
               if (viewModel.files.isNotEmpty)
