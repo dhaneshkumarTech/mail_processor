@@ -76,20 +76,23 @@ class HomeView extends StackedView<HomeViewModel> {
                             border: OutlineInputBorder(),
                             labelText: 'Unit Number',
                           ),
+                          enabled: viewModel.isBusy ? false : true,
                           onFieldSubmitted: (value) => viewModel.processfile(),
                         ),
                       ),
                       horizontalSpaceSmall,
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(100, 64),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                        ),
-                        onPressed: () => viewModel.processfile(),
-                        child: const Text('Send'),
-                      ),
+                      viewModel.isBusy
+                          ? const CircularProgressIndicator()
+                          : ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(100, 64),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                              ),
+                              onPressed: () => viewModel.processfile(),
+                              child: const Text('Send'),
+                            ),
                     ],
                   ),
                 ),
