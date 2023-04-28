@@ -20,6 +20,8 @@ class HomeViewModel extends BaseViewModel {
   TextEditingController unitNumberController = TextEditingController();
   FocusNode unitNumberFocusNode = FocusNode();
 
+  Timer? focusRequestTimer;
+
   List<File> files = [];
   List<CsvData> csvData = [];
   int currentFile = 0;
@@ -39,13 +41,24 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void pickFiles(BuildContext context) async {
+  void startFocusRequestTimer() {
+    focusRequestTimer?.cancel();
+    focusRequestTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        if (files.isNotEmpty) {
+          if (!unitNumberFocusNode.hasFocus) {
+            unitNumberFocusNode.requestFocus();
+          }
+        }
+      },
+    );
+  }
+
+  void pickFiles() async {
     final resultFiles = await filePickerService.getFiles(true);
     if (resultFiles != null) {
       files = resultFiles;
-      if (!unitNumberFocusNode.hasFocus) {
-        FocusScope.of(context).requestFocus(unitNumberFocusNode);
-      }
       notifyListeners();
     }
   }

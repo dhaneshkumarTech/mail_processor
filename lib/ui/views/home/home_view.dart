@@ -3,7 +3,6 @@ import 'package:mail_processor/app/app.locator.dart';
 import 'package:mail_processor/ui/common/ui_helpers.dart';
 import 'package:stacked/stacked.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-
 import 'home_viewmodel.dart';
 
 class HomeView extends StackedView<HomeViewModel> {
@@ -22,7 +21,9 @@ class HomeView extends StackedView<HomeViewModel> {
         title: const Text('Home'),
         actions: [
           TextButton(
-            onPressed: () => viewModel.pickFiles(context),
+            onPressed: () {
+              viewModel.pickFiles();
+            },
             child: Row(
               children: [
                 const Icon(Icons.attach_file),
@@ -61,7 +62,7 @@ class HomeView extends StackedView<HomeViewModel> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              if (viewModel.files.isNotEmpty) verticalSpaceSmall,
+              verticalSpaceSmall,
               if (viewModel.files.isNotEmpty)
                 Form(
                   key: viewModel.formKey,
@@ -70,18 +71,17 @@ class HomeView extends StackedView<HomeViewModel> {
                     children: [
                       SizedBox(
                         width: screenWidth(context) * 0.25,
-                        child: FocusScope(
-                          child: TextFormField(
-                            controller: viewModel.unitNumberController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Unit Number',
-                            ),
-                            focusNode: viewModel.unitNumberFocusNode,
-                            enabled: viewModel.isBusy ? false : true,
-                            onFieldSubmitted: (value) =>
-                                viewModel.processfile(),
+                        child: TextFormField(
+                          controller: viewModel.unitNumberController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Unit Number',
                           ),
+                          enabled: viewModel.isBusy ? false : true,
+                          focusNode: viewModel.unitNumberFocusNode,
+                          onFieldSubmitted: (value) {
+                            viewModel.processfile();
+                          },
                         ),
                       ),
                       horizontalSpaceSmall,
@@ -95,10 +95,6 @@ class HomeView extends StackedView<HomeViewModel> {
                                 ),
                               ),
                               onPressed: () {
-                                if (!viewModel.unitNumberFocusNode.hasFocus) {
-                                  FocusScope.of(context).requestFocus(
-                                      viewModel.unitNumberFocusNode);
-                                }
                                 viewModel.processfile();
                               },
                               child: const Text('Send'),
@@ -155,8 +151,6 @@ class HomeView extends StackedView<HomeViewModel> {
                                   ),
                                   child: SfPdfViewer.file(
                                     viewModel.files[index],
-                                    canShowScrollHead: false,
-                                    canShowScrollStatus: false,
                                   ),
                                 ),
                                 Positioned.fill(
@@ -180,10 +174,8 @@ class HomeView extends StackedView<HomeViewModel> {
                             color: Colors.grey,
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                          child: InteractiveViewer(
-                            child: SfPdfViewer.file(
-                              viewModel.files[viewModel.currentFile],
-                            ),
+                          child: SfPdfViewer.file(
+                            viewModel.files[viewModel.currentFile],
                           ),
                         ),
                       ),
@@ -202,6 +194,13 @@ class HomeView extends StackedView<HomeViewModel> {
     BuildContext context,
   ) =>
       locator<HomeViewModel>();
+
+  @override
+  void onViewModelReady(HomeViewModel viewModel) {
+    viewModel.startFocusRequestTimer();
+
+    super.onViewModelReady(viewModel);
+  }
 
   @override
   bool get disposeViewModel => false;
