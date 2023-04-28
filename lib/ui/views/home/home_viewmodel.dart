@@ -133,6 +133,7 @@ class HomeViewModel extends BaseViewModel {
         message: 'No email found for unit number $unitNumber',
       );
       await moveFile(folderPath, unitNumber);
+      unitNumberController.clear();
     } else {
       await moveFile(folderPath, unitNumber);
 
@@ -142,6 +143,8 @@ class HomeViewModel extends BaseViewModel {
       notifyListeners();
 
       await emailFile(recipientEmail, email, password, subject, text);
+
+      unitNumberController.clear();
     }
 
     files.removeAt(currentFile);
