@@ -187,9 +187,9 @@ class HomeViewModel extends BaseViewModel {
       ),
     );
     if (result) {
-      await _dialogService.showDialog(
+      _snackbarService.showSnackbar(
         title: 'Success',
-        description:
+        message:
             'An email has been sent to $recipientEmail with the file attached.',
       );
     } else {
