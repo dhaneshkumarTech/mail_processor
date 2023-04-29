@@ -85,8 +85,8 @@ class HomeView extends StackedView<HomeViewModel> {
                         focusNode: viewModel.unitNumberFocusNode,
                         onFieldSubmitted: viewModel.isBusy
                             ? null
-                            : (value) {
-                                viewModel.processfile();
+                            : (value) async {
+                                await viewModel.processfile();
                               },
                       ),
                     ),
@@ -102,8 +102,8 @@ class HomeView extends StackedView<HomeViewModel> {
                             ),
                             onPressed: viewModel.isBusy
                                 ? null
-                                : () {
-                                    viewModel.processfile();
+                                : () async {
+                                    await viewModel.processfile();
                                   },
                             child:
                                 Text(viewModel.isBusy ? 'Sending...' : 'Send'),

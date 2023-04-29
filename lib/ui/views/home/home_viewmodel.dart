@@ -67,7 +67,7 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  void processfile() async {
+  Future<void> processfile() async {
     final unitNumber = unitNumberController.text;
 
     if (unitNumber.isEmpty) {
