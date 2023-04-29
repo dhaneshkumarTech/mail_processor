@@ -39,6 +39,7 @@ class SettingsViewModel extends BaseViewModel {
 
     _snackBarService.showSnackbar(
       message: 'Settings saved',
+      duration: const Duration(seconds: 1),
     );
   }
 

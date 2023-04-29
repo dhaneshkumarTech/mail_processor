@@ -57,117 +57,117 @@ class HomeView extends StackedView<HomeViewModel> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              verticalSpaceSmall,
-              if (viewModel.files.isNotEmpty)
-                Form(
-                  key: viewModel.formKey,
-                  child: Row(
-                    children: [
-                      horizontalSpaceMassive,
-                      Text(
-                        'File ${viewModel.currentFile + 1}/${viewModel.files.length}',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      horizontalSpaceLarge,
-                      horizontalSpaceMassive,
-                      horizontalSpaceMassive,
-                      SizedBox(
-                        width: screenWidth(context) * 0.25,
-                        child: TextFormField(
-                          controller: viewModel.unitNumberController,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Unit Number',
-                          ),
-                          enabled: viewModel.isBusy ? false : true,
-                          focusNode: viewModel.unitNumberFocusNode,
-                          onFieldSubmitted: (value) {
-                            viewModel.processfile();
-                          },
+        child: Column(
+          children: [
+            verticalSpaceSmall,
+            if (viewModel.files.isNotEmpty)
+              Form(
+                key: viewModel.formKey,
+                child: Row(
+                  children: [
+                    horizontalSpaceMassive,
+                    Text(
+                      'File ${viewModel.currentFile + 1}/${viewModel.files.length}',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    horizontalSpaceLarge,
+                    horizontalSpaceMassive,
+                    horizontalSpaceMassive,
+                    SizedBox(
+                      width: screenWidth(context) * 0.25,
+                      child: TextFormField(
+                        controller: viewModel.unitNumberController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Unit Number',
                         ),
+                        enabled: viewModel.isBusy ? false : true,
+                        focusNode: viewModel.unitNumberFocusNode,
+                        onFieldSubmitted: (value) {
+                          viewModel.processfile();
+                        },
                       ),
-                      horizontalSpaceSmall,
-                      viewModel.isBusy
-                          ? const CircularProgressIndicator()
-                          : ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size(100, 64),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(3),
-                                ),
+                    ),
+                    horizontalSpaceSmall,
+                    viewModel.isBusy
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(100, 64),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3),
                               ),
-                              onPressed: () {
-                                viewModel.processfile();
-                              },
-                              child: const Text('Send'),
                             ),
-                    ],
-                  ),
+                            onPressed: () {
+                              viewModel.processfile();
+                            },
+                            child: const Text('Send'),
+                          ),
+                  ],
                 ),
-              verticalSpaceSmall,
-              if (viewModel.files.isNotEmpty)
-                SizedBox(
-                  height: screenHeight(context) * 0.8,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: viewModel.files.length,
-                          itemBuilder: (context, index) => GestureDetector(
-                            onTap: () => viewModel.onUpdate(index),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Container(
-                                  width: 200,
-                                  height: 200,
-                                  margin: const EdgeInsets.all(8.0),
-                                  padding: const EdgeInsets.all(8.0),
-                                  decoration: BoxDecoration(
-                                    color: viewModel.currentFile == index
-                                        ? Colors.blue
-                                        : Colors.grey,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
+              ),
+            verticalSpaceSmall,
+            if (viewModel.files.isNotEmpty)
+              SizedBox(
+                height: screenHeight(context) * 0.8,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: viewModel.files.length,
+                        itemBuilder: (context, index) => GestureDetector(
+                          onTap: () => viewModel.onUpdate(index),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                width: 200,
+                                height: 200,
+                                margin: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: viewModel.currentFile == index
+                                      ? Colors.blue
+                                      : Colors.grey,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: InteractiveViewer(
                                   child: SfPdfViewer.file(
                                     viewModel.files[index],
                                   ),
                                 ),
-                                Positioned.fill(
-                                  child: Container(
-                                    color: Colors.transparent,
-                                  ),
-                                )
-                              ],
-                            ),
+                              ),
+                              Positioned.fill(
+                                child: Container(
+                                  color: Colors.transparent,
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          width: screenWidth(context) / 2,
-                          height: screenHeight(context) / 2,
-                          margin: const EdgeInsets.all(8.0),
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: SfPdfViewer.file(
-                            viewModel.files[viewModel.currentFile],
-                          ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        width: screenWidth(context) / 2,
+                        height: screenHeight(context) / 2,
+                        margin: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: SfPdfViewer.file(
+                          viewModel.files[viewModel.currentFile],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );

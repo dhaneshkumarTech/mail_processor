@@ -92,14 +92,6 @@ class HomeViewModel extends BaseViewModel {
       );
       return;
     }
-    final folderPath = sp.getString('controller4');
-    if (folderPath == null) {
-      await _dialogService.showDialog(
-        title: 'Error',
-        description: 'Please select a folder path in settings view first',
-      );
-      return;
-    }
 
     final email = sp.getString('controller0');
     if (email!.isEmpty) {
@@ -134,6 +126,15 @@ class HomeViewModel extends BaseViewModel {
       await _dialogService.showDialog(
         title: 'Error',
         description: 'Please enter a text in settings view first',
+      );
+      return;
+    }
+
+    final folderPath = sp.getString('controller4');
+    if (folderPath == null) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'Please select a folder path in settings view first',
       );
       return;
     }
