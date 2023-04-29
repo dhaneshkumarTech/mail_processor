@@ -83,9 +83,11 @@ class HomeView extends StackedView<HomeViewModel> {
                         ),
                         enabled: viewModel.isBusy ? false : true,
                         focusNode: viewModel.unitNumberFocusNode,
-                        onFieldSubmitted: (value) {
-                          viewModel.processfile();
-                        },
+                        onFieldSubmitted: viewModel.isBusy
+                            ? null
+                            : (value) {
+                                viewModel.processfile();
+                              },
                       ),
                     ),
                     horizontalSpaceSmall,
@@ -98,10 +100,13 @@ class HomeView extends StackedView<HomeViewModel> {
                                 borderRadius: BorderRadius.circular(3),
                               ),
                             ),
-                            onPressed: () {
-                              viewModel.processfile();
-                            },
-                            child: const Text('Send'),
+                            onPressed: viewModel.isBusy
+                                ? null
+                                : () {
+                                    viewModel.processfile();
+                                  },
+                            child:
+                                Text(viewModel.isBusy ? 'Sending...' : 'Send'),
                           ),
                   ],
                 ),
