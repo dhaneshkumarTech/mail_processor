@@ -149,7 +149,7 @@ class HomeViewModel extends BaseViewModel {
 
     if (recipientEmail.isEmpty) {
       _snackbarService.showSnackbar(
-        duration: const Duration(seconds: 1),
+        duration: const Duration(seconds: 2),
         title: 'Error',
         message: 'No email found for unit number $unitNumber',
       );
@@ -169,11 +169,6 @@ class HomeViewModel extends BaseViewModel {
           folderPath,
           unitNumber,
         ),
-      );
-      _snackbarService.showSnackbar(
-        duration: const Duration(seconds: 1),
-        message:
-            'The file has been moved successfully. You can find it in $folderPath/$unitNumber',
       );
       unitNumberController.clear();
     } catch (e) {
@@ -202,12 +197,6 @@ class HomeViewModel extends BaseViewModel {
       ),
     );
     if (result) {
-      _snackbarService.showSnackbar(
-        duration: const Duration(seconds: 1),
-        title: 'Success',
-        message:
-            'An email has been sent to $recipientEmail with the file attached.',
-      );
     } else {
       await _dialogService.showDialog(
         title: 'Error',

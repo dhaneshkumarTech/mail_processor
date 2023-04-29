@@ -17,8 +17,6 @@ class HomeView extends StackedView<HomeViewModel> {
     return Scaffold(
       appBar: AppBar(
         elevation: 5,
-        centerTitle: true,
-        title: const Text('Home'),
         actions: [
           TextButton(
             onPressed: () {
@@ -64,32 +62,18 @@ class HomeView extends StackedView<HomeViewModel> {
             children: [
               verticalSpaceSmall,
               if (viewModel.files.isNotEmpty)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: viewModel.previousDoc,
-                      icon: const Icon(Icons.arrow_back),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'File ${viewModel.currentFile + 1}/${viewModel.files.length}',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: viewModel.nextDoc,
-                      icon: const Icon(Icons.arrow_forward),
-                    ),
-                  ],
-                ),
-              if (viewModel.files.isNotEmpty)
                 Form(
                   key: viewModel.formKey,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      horizontalSpaceMassive,
+                      Text(
+                        'File ${viewModel.currentFile + 1}/${viewModel.files.length}',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      horizontalSpaceLarge,
+                      horizontalSpaceMassive,
+                      horizontalSpaceMassive,
                       SizedBox(
                         width: screenWidth(context) * 0.25,
                         child: TextFormField(

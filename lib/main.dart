@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mail_processor/app/app.bottomsheets.dart';
-import 'package:mail_processor/app/app.dialogs.dart';
 import 'package:mail_processor/app/app.locator.dart';
 import 'package:mail_processor/app/app.router.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -11,8 +9,6 @@ late SharedPreferences sp;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
-  setupDialogUi();
-  setupBottomSheetUi();
 
   sp = await SharedPreferences.getInstance();
 
