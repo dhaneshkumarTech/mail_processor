@@ -137,9 +137,7 @@ class HomeViewModel extends BaseViewModel {
 
     await moveFile(folderPath, unitNumber);
 
-    if (recipientEmail.isEmpty) {
-      return;
-    } else {
+    if (recipientEmail.isNotEmpty) {
       await emailFile(recipientEmail, email, password, subject, text);
     }
 

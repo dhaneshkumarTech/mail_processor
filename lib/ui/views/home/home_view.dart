@@ -91,9 +91,7 @@ class HomeView extends StackedView<HomeViewModel> {
                       ),
                     ),
                     horizontalSpaceSmall,
-                    viewModel.isBusy
-                        ? const CircularProgressIndicator()
-                        : ElevatedButton(
+                  ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(100, 64),
                               shape: RoundedRectangleBorder(
