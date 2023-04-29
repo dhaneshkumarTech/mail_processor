@@ -7,8 +7,6 @@ import 'package:mail_processor/models/csv_data.dart';
 import 'package:path/path.dart' as p;
 
 class FilePickerService {
-  List<File>? servicefiles = [];
-
   Future<List<File>?> getFiles(bool multiple) async {
     try {
       final files = await FilePicker.platform.pickFiles(
@@ -18,8 +16,7 @@ class FilePickerService {
       );
 
       if (files != null) {
-        servicefiles = files.files.map((e) => File(e.path!)).toList();
-        return servicefiles;
+        return files.files.map((e) => File(e.path!)).toList();
       } else {
         return null;
       }

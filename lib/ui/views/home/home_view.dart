@@ -70,9 +70,9 @@ class HomeView extends StackedView<HomeViewModel> {
                       'File ${viewModel.currentFile + 1}/${viewModel.files.length}',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    horizontalSpaceLarge,
-                    horizontalSpaceMassive,
-                    horizontalSpaceMassive,
+                    SizedBox(
+                      width: screenWidth(context) * 0.1,
+                    ),
                     SizedBox(
                       width: screenWidth(context) * 0.25,
                       child: TextFormField(

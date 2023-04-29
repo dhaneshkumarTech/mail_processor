@@ -14,7 +14,6 @@ class HomeViewModel extends BaseViewModel {
   final filePickerService = locator<FilePickerService>();
   final emailService = locator<EmailService>();
   final _dialogService = locator<DialogService>();
-  final _snackbarService = locator<SnackbarService>();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController unitNumberController = TextEditingController();
@@ -28,16 +27,6 @@ class HomeViewModel extends BaseViewModel {
 
   void onUpdate(int index) {
     currentFile = index;
-    notifyListeners();
-  }
-
-  void nextDoc() {
-    currentFile = (currentFile + 1) % files.length;
-    notifyListeners();
-  }
-
-  void previousDoc() {
-    currentFile = (currentFile - 1) % files.length;
     notifyListeners();
   }
 
@@ -149,11 +138,7 @@ class HomeViewModel extends BaseViewModel {
     await moveFile(folderPath, unitNumber);
 
     if (recipientEmail.isEmpty) {
-      _snackbarService.showSnackbar(
-        duration: const Duration(seconds: 2),
-        title: 'Error',
-        message: 'No email found for unit number $unitNumber',
-      );
+      return;
     } else {
       await emailFile(recipientEmail, email, password, subject, text);
     }
