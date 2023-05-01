@@ -62,8 +62,8 @@ class HomeView extends StackedView<HomeViewModel> {
             verticalSpaceSmall,
             if (viewModel.files.isNotEmpty)
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  horizontalSpaceMassive,
                   Text(
                     'File ${viewModel.currentFile + 1}/${viewModel.files.length}',
                     style: Theme.of(context).textTheme.titleLarge,
@@ -72,12 +72,16 @@ class HomeView extends StackedView<HomeViewModel> {
                     width: screenWidth(context) * 0.1,
                   ),
                   SizedBox(
-                    width: screenWidth(context) * 0.25,
+                    width: screenWidth(context) * 0.3,
                     child: TextFormField(
                       controller: viewModel.unitNumberController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Unit Number',
+                      ),
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
                       ),
                       focusNode: viewModel.unitNumberFocusNode,
                       onFieldSubmitted: (value) async {
@@ -85,7 +89,6 @@ class HomeView extends StackedView<HomeViewModel> {
                       },
                     ),
                   ),
-                  horizontalSpaceSmall,
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(100, 64),
@@ -96,7 +99,6 @@ class HomeView extends StackedView<HomeViewModel> {
                     onPressed: viewModel.processfile,
                     child: const Text('Send'),
                   ),
-                  horizontalSpaceMedium,
                   Text(
                     '${viewModel.sendingEmails} emails in queue',
                     style: Theme.of(context).textTheme.titleMedium,
@@ -121,8 +123,8 @@ class HomeView extends StackedView<HomeViewModel> {
                               Container(
                                 width: 200,
                                 height: 200,
-                                margin: const EdgeInsets.all(8.0),
-                                padding: const EdgeInsets.all(8.0),
+                                margin: const EdgeInsets.all(4.0),
+                                padding: const EdgeInsets.all(4.0),
                                 decoration: BoxDecoration(
                                   color: viewModel.currentFile == index
                                       ? Colors.blue
@@ -150,8 +152,8 @@ class HomeView extends StackedView<HomeViewModel> {
                       child: Container(
                         width: screenWidth(context) / 2,
                         height: screenHeight(context) / 2,
-                        margin: const EdgeInsets.all(8.0),
-                        padding: const EdgeInsets.all(8.0),
+                        margin: const EdgeInsets.all(4.0),
+                        padding: const EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
                           color: Colors.grey,
                           borderRadius: BorderRadius.circular(8.0),
