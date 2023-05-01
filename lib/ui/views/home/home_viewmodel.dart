@@ -136,31 +136,34 @@ class HomeViewModel extends BaseViewModel {
         )
         .email;
 
-    await moveFile(folderPath, unitNumber);
+    final file = await moveFile(folderPath, unitNumber);
+    if (file != null) {
+      unitNumberController.clear();
+      files.remove(files[currentFile]);
+      notifyListeners();
 
-    if (recipientEmail.isNotEmpty) {
-      emailFile(recipientEmail, email, password, subject, text);
+      if (recipientEmail.isNotEmpty) {
+        emailFile(
+          recipientEmail,
+          email,
+          password,
+          subject,
+          text,
+          file,
+        );
+      }
     }
-
-    files.removeAt(currentFile);
-    notifyListeners();
   }
 
-  Future<void> moveFile(String folderPath, String unitNumber) async {
+  Future<File?> moveFile(String folderPath, String unitNumber) async {
     try {
-      await runBusyFuture(
-        filePickerService.moveFileToFolder(
-          files[currentFile],
-          folderPath,
-          unitNumber,
-        ),
+      return await filePickerService.moveFileToFolder(
+        files[currentFile],
+        folderPath,
+        unitNumber,
       );
-      unitNumberController.clear();
     } catch (e) {
-      await _dialogService.showDialog(
-        title: 'Error',
-        description: e.toString(),
-      );
+      return null;
     }
   }
 
@@ -170,29 +173,27 @@ class HomeViewModel extends BaseViewModel {
     String password,
     String subject,
     String text,
-  ) {
+    File file,
+  ) async {
     sendingEmails++;
     notifyListeners();
-    emailService
-        .sendEmailWithAttachment(
-      files[currentFile],
-      email,
-      password,
-      subject,
-      text,
-      recipientEmail,
-    )
-        .then((value) {
-      if (!value) {
-        _dialogService.showDialog(
-          title: 'Error',
-          description:
-              'An error occurred while sending the email. Please check your credentials.',
-        );
-      }
-    }).whenComplete(() {
+    try {
+      await emailService.sendEmailWithAttachment(
+        file,
+        email,
+        password,
+        subject,
+        text,
+        recipientEmail,
+      );
+    } catch (e) {
+      await _dialogService.showDialog(
+        title: 'Error',
+        description: 'An error occurred while sending the email: $e',
+      );
+    } finally {
       sendingEmails--;
       notifyListeners();
-    });
+    }
   }
 }

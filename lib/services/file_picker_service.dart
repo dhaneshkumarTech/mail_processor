@@ -50,7 +50,7 @@ class FilePickerService {
     }
   }
 
-  Future<Directory> createFolderIfNotExists(
+  Future<Directory?> createFolderIfNotExists(
     String folderPath,
     String folderName,
   ) async {
@@ -64,18 +64,22 @@ class FilePickerService {
         return folder;
       }
     } catch (e) {
-      rethrow;
+      return null;
     }
   }
 
-  Future<void> moveFileToFolder(
+  Future<File?> moveFileToFolder(
       File file, String folderPath, String folderName) async {
     try {
       final folder = await createFolderIfNotExists(folderPath, folderName);
-      final newFilePath = p.join(folder.path, p.basename(file.path));
-      await file.rename(newFilePath);
+      if (folder != null) {
+        final newFilePath = p.join(folder.path, p.basename(file.path));
+        return await file.rename(newFilePath);
+      } else {
+        return null;
+      }
     } catch (e) {
-      rethrow;
+      return null;
     }
   }
 

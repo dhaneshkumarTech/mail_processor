@@ -79,31 +79,28 @@ class HomeView extends StackedView<HomeViewModel> {
                         border: OutlineInputBorder(),
                         hintText: 'Unit Number',
                       ),
-                      enabled: viewModel.isBusy ? false : true,
                       focusNode: viewModel.unitNumberFocusNode,
-                      onFieldSubmitted: viewModel.isBusy
-                          ? null
-                          : (value) async {
-                              await viewModel.processfile();
-                            },
+                      onFieldSubmitted: (value) async {
+                        await viewModel.processfile();
+                      },
                     ),
                   ),
                   horizontalSpaceSmall,
-                ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(100, 64),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(3),
-                            ),
-                          ),
-                          onPressed: viewModel.isBusy
-                              ? null
-                              : () async {
-                                  await viewModel.processfile();
-                                },
-                          child:
-                              Text(viewModel.isBusy ? 'Sending...' : 'Send'),
-                        ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(100, 64),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                    onPressed: viewModel.processfile,
+                    child: const Text('Send'),
+                  ),
+                  horizontalSpaceMedium,
+                  Text(
+                    '${viewModel.sendingEmails} emails in queue',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                 ],
               ),
             verticalSpaceSmall,
