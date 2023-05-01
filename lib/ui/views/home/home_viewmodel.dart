@@ -15,11 +15,12 @@ class HomeViewModel extends BaseViewModel {
   final emailService = locator<EmailService>();
   final _dialogService = locator<DialogService>();
 
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController unitNumberController = TextEditingController();
   FocusNode unitNumberFocusNode = FocusNode();
 
   Timer? focusRequestTimer;
+
+  int sendingEmails = 0;
 
   List<File> files = [];
   List<CsvData> csvData = [];
@@ -138,7 +139,7 @@ class HomeViewModel extends BaseViewModel {
     await moveFile(folderPath, unitNumber);
 
     if (recipientEmail.isNotEmpty) {
-      await emailFile(recipientEmail, email, password, subject, text);
+      emailFile(recipientEmail, email, password, subject, text);
     }
 
     files.removeAt(currentFile);
@@ -163,30 +164,35 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> emailFile(
+  void emailFile(
     String recipientEmail,
     String email,
     String password,
     String subject,
     String text,
-  ) async {
-    final result = await runBusyFuture(
-      emailService.sendEmailWithAttachment(
-        files[currentFile],
-        email,
-        password,
-        subject,
-        text,
-        recipientEmail,
-      ),
-    );
-    if (result) {
-    } else {
-      await _dialogService.showDialog(
-        title: 'Error',
-        description:
-            'An error occurred while sending the email. Please check your credentials.',
-      );
-    }
+  ) {
+    sendingEmails++;
+    notifyListeners();
+    emailService
+        .sendEmailWithAttachment(
+      files[currentFile],
+      email,
+      password,
+      subject,
+      text,
+      recipientEmail,
+    )
+        .then((value) {
+      if (!value) {
+        _dialogService.showDialog(
+          title: 'Error',
+          description:
+              'An error occurred while sending the email. Please check your credentials.',
+        );
+      }
+    }).whenComplete(() {
+      sendingEmails--;
+      notifyListeners();
+    });
   }
 }

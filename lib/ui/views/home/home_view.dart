@@ -61,53 +61,50 @@ class HomeView extends StackedView<HomeViewModel> {
           children: [
             verticalSpaceSmall,
             if (viewModel.files.isNotEmpty)
-              Form(
-                key: viewModel.formKey,
-                child: Row(
-                  children: [
-                    horizontalSpaceMassive,
-                    Text(
-                      'File ${viewModel.currentFile + 1}/${viewModel.files.length}',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    SizedBox(
-                      width: screenWidth(context) * 0.1,
-                    ),
-                    SizedBox(
-                      width: screenWidth(context) * 0.25,
-                      child: TextFormField(
-                        controller: viewModel.unitNumberController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Unit Number',
-                        ),
-                        enabled: viewModel.isBusy ? false : true,
-                        focusNode: viewModel.unitNumberFocusNode,
-                        onFieldSubmitted: viewModel.isBusy
-                            ? null
-                            : (value) async {
-                                await viewModel.processfile();
-                              },
+              Row(
+                children: [
+                  horizontalSpaceMassive,
+                  Text(
+                    'File ${viewModel.currentFile + 1}/${viewModel.files.length}',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  SizedBox(
+                    width: screenWidth(context) * 0.1,
+                  ),
+                  SizedBox(
+                    width: screenWidth(context) * 0.25,
+                    child: TextFormField(
+                      controller: viewModel.unitNumberController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Unit Number',
                       ),
+                      enabled: viewModel.isBusy ? false : true,
+                      focusNode: viewModel.unitNumberFocusNode,
+                      onFieldSubmitted: viewModel.isBusy
+                          ? null
+                          : (value) async {
+                              await viewModel.processfile();
+                            },
                     ),
-                    horizontalSpaceSmall,
-                  ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(100, 64),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(3),
-                              ),
+                  ),
+                  horizontalSpaceSmall,
+                ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(100, 64),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(3),
                             ),
-                            onPressed: viewModel.isBusy
-                                ? null
-                                : () async {
-                                    await viewModel.processfile();
-                                  },
-                            child:
-                                Text(viewModel.isBusy ? 'Sending...' : 'Send'),
                           ),
-                  ],
-                ),
+                          onPressed: viewModel.isBusy
+                              ? null
+                              : () async {
+                                  await viewModel.processfile();
+                                },
+                          child:
+                              Text(viewModel.isBusy ? 'Sending...' : 'Send'),
+                        ),
+                ],
               ),
             verticalSpaceSmall,
             if (viewModel.files.isNotEmpty)
