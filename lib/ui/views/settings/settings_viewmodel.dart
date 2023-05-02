@@ -3,11 +3,9 @@ import 'package:mail_processor/app/app.locator.dart';
 import 'package:mail_processor/main.dart';
 import 'package:mail_processor/services/file_picker_service.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 class SettingsViewModel extends BaseViewModel {
   final _filePickerService = locator<FilePickerService>();
-  final _snackBarService = locator<SnackbarService>();
 
   List<TextEditingController> controllers = [
     TextEditingController(),
@@ -17,6 +15,7 @@ class SettingsViewModel extends BaseViewModel {
     TextEditingController(),
   ];
 
+  String saveText = 'Save';
   bool obscureText = true;
 
   void toggleObscureText() {
@@ -36,11 +35,11 @@ class SettingsViewModel extends BaseViewModel {
         sp.setString('controller${controllers.indexOf(element)}', element.text),
       );
     }
-
-    _snackBarService.showSnackbar(
-      message: 'Settings saved',
-      duration: const Duration(seconds: 1),
-    );
+    saveText = 'Saved';
+    notifyListeners();
+    await Future.delayed(const Duration(seconds: 2));
+    saveText = 'Save';
+    notifyListeners();
   }
 
   Future<void> fetchFolderPath() async {

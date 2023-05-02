@@ -91,17 +91,14 @@ class SettingsView extends StackedView<SettingsViewModel> {
                   onTap: viewModel.fetchFolderPath,
                 ),
                 verticalSpaceLarge,
-                ElevatedButton(
-                  onPressed: () async {
-                    await viewModel.save();
-                  },
-                  child: viewModel.isBusy
-                      ? const CircularProgressIndicator.adaptive()
-                      : const Text('Save'),
+                FilledButton.icon(
+                  onPressed: viewModel.save,
+                  icon: const Icon(Icons.save),
+                  label: Text(viewModel.saveText),
                   style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 60),
+                    minimumSize: const Size(double.infinity, 75),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
                 ),

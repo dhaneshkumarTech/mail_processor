@@ -60,17 +60,16 @@ class HomeView extends StackedView<HomeViewModel> {
         child: Column(
           children: [
             verticalSpaceSmall,
-            if (viewModel.files.isNotEmpty)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'File ${viewModel.currentFile + 1}/${viewModel.files.length}',
+                    'Total Files: ${viewModel.files.length}',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  SizedBox(
-                    width: screenWidth(context) * 0.1,
-                  ),
+                  const Spacer(),
                   SizedBox(
                     width: screenWidth(context) * 0.3,
                     child: TextFormField(
@@ -89,26 +88,33 @@ class HomeView extends StackedView<HomeViewModel> {
                       },
                     ),
                   ),
-                  ElevatedButton(
+                  horizontalSpaceSmall,
+                  FilledButton.icon(
                     style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(100, 64),
+                      minimumSize: const Size(200, 80),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(3),
                       ),
                     ),
+                    icon: const Icon(Icons.send),
                     onPressed: viewModel.processfile,
-                    child: const Text('Send'),
+                    label: const Text('Send'),
                   ),
+                  const Spacer(),
                   Text(
-                    '${viewModel.sendingEmails} emails in queue',
-                    style: Theme.of(context).textTheme.titleMedium,
+                    '${viewModel.sendingEmails} Emails In Queue',
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],
               ),
-            verticalSpaceSmall,
+            ),
+            const Divider(
+              thickness: 10,
+            ),
             if (viewModel.files.isNotEmpty)
-              SizedBox(
-                height: screenHeight(context) * 0.8,
+              Container(
+                height: screenHeight(context) * 0.7,
+                margin: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: [
                     Expanded(
@@ -117,47 +123,45 @@ class HomeView extends StackedView<HomeViewModel> {
                         itemCount: viewModel.files.length,
                         itemBuilder: (context, index) => GestureDetector(
                           onTap: () => viewModel.onUpdate(index),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                width: 200,
-                                height: 200,
-                                margin: const EdgeInsets.all(4.0),
-                                padding: const EdgeInsets.all(4.0),
-                                decoration: BoxDecoration(
-                                  color: viewModel.currentFile == index
-                                      ? Colors.blue
-                                      : Colors.grey,
-                                  borderRadius: BorderRadius.circular(8.0),
+                          child: Container(
+                            height: screenHeight(context) * 0.2,
+                            margin: const EdgeInsets.only(
+                              bottom: 10,
+                              right: 10,
+                            ),
+                            padding: const EdgeInsets.all(4.0),
+                            decoration: BoxDecoration(
+                              color: viewModel.currentFile == index
+                                  ? Colors.blue
+                                  : Colors.grey,
+                            ),
+                            child: Stack(
+                              children: [
+                                SfPdfViewer.file(
+                                  viewModel.files[index],
                                 ),
-                                child: InteractiveViewer(
-                                  child: SfPdfViewer.file(
-                                    viewModel.files[index],
-                                  ),
-                                ),
-                              ),
-                              Positioned.fill(
-                                child: Container(
-                                  color: Colors.transparent,
-                                ),
-                              )
-                            ],
+                                Positioned.fill(
+                                  child: Container(
+                                      color: Colors.transparent,
+                                      child: Center(
+                                        child: Text(
+                                          '${index + 1}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineLarge,
+                                        ),
+                                      )),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                     Expanded(
-                      flex: 3,
+                      flex: 4,
                       child: Container(
-                        width: screenWidth(context) / 2,
-                        height: screenHeight(context) / 2,
-                        margin: const EdgeInsets.all(4.0),
-                        padding: const EdgeInsets.all(4.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
+                        color: Colors.grey,
                         child: SfPdfViewer.file(
                           viewModel.files[viewModel.currentFile],
                         ),
