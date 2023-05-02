@@ -60,53 +60,49 @@ class HomeView extends StackedView<HomeViewModel> {
         child: Column(
           children: [
             verticalSpaceSmall,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Total Files: ${viewModel.files.length}',
-                    style: Theme.of(context).textTheme.titleLarge,
+            Row(
+              children: [
+                Text(
+                  'Total Files: ${viewModel.files.length}',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const Spacer(),
+                SizedBox(
+                  width: screenWidth(context) * 0.3,
+                  child: TextFormField(
+                    controller: viewModel.unitNumberController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Unit Number',
+                    ),
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    focusNode: viewModel.unitNumberFocusNode,
+                    onFieldSubmitted: (value) async {
+                      await viewModel.processfile();
+                    },
                   ),
-                  const Spacer(),
-                  SizedBox(
-                    width: screenWidth(context) * 0.3,
-                    child: TextFormField(
-                      controller: viewModel.unitNumberController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Unit Number',
-                      ),
-                      style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      focusNode: viewModel.unitNumberFocusNode,
-                      onFieldSubmitted: (value) async {
-                        await viewModel.processfile();
-                      },
+                ),
+                horizontalSpaceSmall,
+                FilledButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(screenWidth(context) * 0.1, 80),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(3),
                     ),
                   ),
-                  horizontalSpaceSmall,
-                  FilledButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(200, 80),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    ),
-                    icon: const Icon(Icons.send),
-                    onPressed: viewModel.processfile,
-                    label: const Text('Send'),
-                  ),
-                  const Spacer(),
-                  Text(
-                    '${viewModel.sendingEmails} Emails In Queue',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ],
-              ),
+                  icon: const Icon(Icons.send),
+                  onPressed: viewModel.processfile,
+                  label: const Text('Send'),
+                ),
+                const Spacer(),
+                Text(
+                  '${viewModel.sendingEmails} Emails In Queue',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ],
             ),
             const Divider(
               thickness: 10,
